@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>低造价节庆美陈 3D 效果图生成器-古月AI智能体</title>
+<title>低造价节庆美陈 3D 效果图生成器 -古月AI智能体</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:"Microsoft YaHei",sans-serif;}
 body{
@@ -34,7 +34,7 @@ h1{text-align:center;font-size:32px;margin-bottom:40px;font-weight:800;text-shad
 }
 .card:hover{transform:translateY(-3px) scale(1.02);}
 label{font-size:14px;opacity:0.9;color:#fff;}
-input, select{
+textarea{
   width:100%;
   padding:14px;
   margin-top:8px;
@@ -44,6 +44,8 @@ input, select{
   border-radius:12px;
   color:white;
   font-size:16px;
+  min-height:100px;
+  resize:none;
 }
 button{
   padding:14px 20px;
@@ -58,7 +60,6 @@ button{
   transition:0.3s;
 }
 button:hover{transform:translateY(-2px);box-shadow:0 10px 25px rgba(0,0,0,0.6);}
-.generate{width:100%;margin-top:10px;}
 .results{display:grid;grid-template-columns:repeat(auto-fill,minmax(450px,1fr));gap:20px;}
 .promptCard{
   background:rgba(0,0,0,0.65);
@@ -91,20 +92,11 @@ button:hover{transform:translateY(-2px);box-shadow:0 10px 25px rgba(0,0,0,0.6);}
 </head>
 <body>
 <div class="container">
-<h1>低造价节庆美陈 3D 效果图生成器-古月AI智能体</h1>
+<h1>低造价节庆美陈 3D 效果图生成器 -古月AI智能体</h1>
 
 <div class="card">
-<label>节日名称</label>
-<input id="festival" placeholder="例如：春节、中秋、圣诞节">
-<label>公司名称 / 行业（可选）</label>
-<input id="company" placeholder="例如：餐饮公司、科技企业">
-<label>场地类型（可选）</label>
-<select id="venue">
-  <option value="">通用美陈结构</option>
-  <option value="前台">公司前台</option>
-  <option value="大门口">公司大门口 / 入口区域</option>
-  <option value="中庭">中庭 / 广场 / 开放空间</option>
-</select>
+<label>输入节日 / 公司 / 场地 / 其他描述</label>
+<textarea id="inputContent" placeholder="例如：春节，公司前台，餐饮行业"></textarea>
 <button class="generate" onclick="generate()">生成20组低造价节庆美陈提示词</button>
 </div>
 
@@ -121,10 +113,9 @@ let assistTexts=[
 ];
 
 function generate(){
-  let festival=document.getElementById("festival").value.trim();
-  if(!festival){alert("请输入节日名称");return;}
-  let company=document.getElementById("company").value.trim();
-  let venue=document.getElementById("venue").value;
+  let content=document.getElementById("inputContent").value.trim();
+  if(!content){alert("请输入内容描述");return;}
+  
   let container=document.getElementById("results");
   container.innerHTML="";
   
@@ -135,7 +126,7 @@ function generate(){
     while(assist2===assist1) assist2=rand(assistTexts);
     while(assist3===assist1 || assist3===assist2) assist3=rand(assistTexts);
     
-    let text=`你需要设计的美陈是以节日${festival}为主题的低造价3D装置，${company?("结合"+company+"行业属性，"):""}材质使用KT板与PVC板，多层叠加结构，中间主背景板+辅助异形背板+低位前景点缀，整体真实比例，可施工，画面完整且富有节日氛围${venue?("，场地类型："+venue+"，装置结构根据场地自动调整"):""}，应用场景是各类空间（商业 / 公共 / 文化）+ 特定节日，核心目标是烘托节日氛围、传递节日情感，设计重点是：强化节日符号；色彩贴合节日调性并融合行业属性；在低造价条件下追求最佳设计感与画面完成度；材质低造价、易制作、易安装，需要中文提示词。辅助信息：${assist1}，${assist2}，${assist3}`;
+    let text=`你需要设计的美陈是以${content}为主题的低造价3D装置，材质使用KT板与PVC板，多层叠加结构，中间主背景板+辅助异形背板+低位前景点缀，整体真实比例，可施工，画面完整且富有节日氛围，应用场景是各类空间（商业 / 公共 / 文化）+ 特定节日，核心目标是烘托节日氛围、传递节日情感，设计重点是：强化节日符号；色彩贴合节日调性并融合行业属性；在低造价条件下追求最佳设计感与画面完成度；材质低造价、易制作、易安装，需要中文提示词。辅助信息：${assist1}，${assist2}，${assist3}`;
     
     let card=document.createElement("div");
     card.className="promptCard";

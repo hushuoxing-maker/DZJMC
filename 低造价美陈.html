@@ -1,515 +1,162 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>低造价节庆美陈 · 20组提示词生成器</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            background: #6d8f7c;
-            font-family: 'Microsoft YaHei', 'PingFang SC', 'Helvetica Neue', Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 30px 20px;
-        }
-
-        .generator-card {
-            max-width: 1600px;
-            width: 100%;
-            background: #fefcf8;
-            border-radius: 60px;
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.2);
-            overflow: hidden;
-            border: 3px solid #d9c5a6;
-        }
-
-        .header {
-            background: #3a6d8c;
-            padding: 32px 40px;
-            color: #ffffff;
-            border-bottom: 6px solid #f9d56e;
-            border-radius: 60px 60px 0 0;
-        }
-
-        .header h1 {
-            font-size: 42px;
-            font-weight: 700;
-            letter-spacing: 2px;
-            margin-bottom: 10px;
-            text-shadow: 3px 3px 0 #1a4a6e;
-        }
-
-        .header p {
-            font-size: 18px;
-            color: #e0f0ff;
-            font-weight: 300;
-            border-left: 4px solid #f9d56e;
-            padding-left: 20px;
-        }
-
-        .main {
-            display: flex;
-            flex-wrap: wrap;
-        }
-
-        .input-section {
-            flex: 1.2;
-            min-width: 420px;
-            background: #ffffff;
-            padding: 45px 40px;
-            border-right: 2px dashed #d9c5a6;
-        }
-
-        .input-section h2 {
-            font-size: 30px;
-            font-weight: 600;
-            color: #3a6d8c;
-            margin-bottom: 30px;
-            border-bottom: 4px dotted #f9d56e;
-            padding-bottom: 15px;
-        }
-
-        .input-group {
-            margin-bottom: 28px;
-        }
-
-        .input-group label {
-            display: block;
-            font-size: 18px;
-            font-weight: 600;
-            color: #5a6b5c;
-            margin-bottom: 8px;
-            letter-spacing: 0.5px;
-        }
-
-        .input-group input, .input-group textarea, .input-group select {
-            width: 100%;
-            padding: 18px 22px;
-            font-size: 17px;
-            background: #fafcff;
-            border: 2px solid #d9c5a6;
-            border-radius: 40px;
-            transition: 0.2s;
-            font-family: inherit;
-            color: #2d4a6a;
-        }
-
-        .input-group input:focus, .input-group textarea:focus, .input-group select:focus {
-            border-color: #f9d56e;
-            outline: none;
-            box-shadow: 0 0 0 5px rgba(249, 213, 110, 0.2);
-        }
-
-        .input-group textarea {
-            min-height: 100px;
-            resize: vertical;
-            border-radius: 30px;
-        }
-
-        .generate-btn {
-            background: #3a6d8c;
-            border: none;
-            width: 100%;
-            padding: 22px;
-            font-size: 28px;
-            font-weight: 700;
-            color: #ffffff;
-            letter-spacing: 4px;
-            border-radius: 60px;
-            cursor: pointer;
-            transition: 0.2s;
-            margin-top: 25px;
-            border-bottom: 5px solid #f9d56e;
-            text-shadow: 2px 2px 0 #1a4a6e;
-        }
-
-        .generate-btn:hover {
-            background: #1a4f7a;
-            transform: translateY(-3px);
-            box-shadow: 0 15px 25px rgba(40, 90, 140, 0.3);
-        }
-
-        .output-section {
-            flex: 2;
-            background: #fefcf8;
-            padding: 45px 40px;
-            max-height: 800px;
-            overflow-y: auto;
-        }
-
-        .output-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-        }
-
-        .output-header h2 {
-            font-size: 30px;
-            font-weight: 600;
-            color: #3a6d8c;
-        }
-
-        .badge {
-            background: #f9d56e;
-            color: #3a6d8c;
-            padding: 8px 28px;
-            border-radius: 40px;
-            font-size: 18px;
-            font-weight: 700;
-            border: 2px solid #d9c5a6;
-        }
-
-        .prompts-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .prompt-item {
-            background: #ffffff;
-            border: 2px solid #d9c5a6;
-            border-radius: 40px;
-            padding: 28px 32px;
-            transition: 0.2s;
-            position: relative;
-            box-shadow: 0 6px 0 #d9c5a6;
-        }
-
-        .prompt-item:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 0 #b7a88c;
-            border-color: #f9d56e;
-        }
-
-        .prompt-number {
-            font-size: 16px;
-            font-weight: 700;
-            color: #3a6d8c;
-            letter-spacing: 1px;
-            margin-bottom: 12px;
-            background: #f9d56e;
-            display: inline-block;
-            padding: 6px 22px;
-            border-radius: 40px;
-            border: 2px solid #d9c5a6;
-        }
-
-        .prompt-text {
-            font-size: 17px;
-            line-height: 1.8;
-            color: #3a5a78;
-            margin-bottom: 15px;
-            padding-right: 120px;
-        }
-
-        .copy-btn {
-            background: #f9d56e;
-            color: #3a6d8c;
-            border: none;
-            border-radius: 40px;
-            padding: 10px 25px;
-            font-size: 16px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: 0.2s;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            border: 2px solid #d9c5a6;
-            position: absolute;
-            bottom: 28px;
-            right: 32px;
-        }
-
-        .copy-btn:hover {
-            background: #3a6d8c;
-            color: #f9d56e;
-            border-color: #f9d56e;
-        }
-
-        .copy-btn.copied {
-            background: #4caf50;
-            color: white;
-            border-color: #388e3c;
-        }
-
-        .footer-note {
-            margin-top: 30px;
-            font-size: 16px;
-            color: #b7a88c;
-            text-align: right;
-            border-top: 2px dashed #d9c5a6;
-            padding-top: 20px;
-            font-style: italic;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>低造价节庆美陈 3D 效果图生成器-古月AI智能体</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:"Microsoft YaHei",sans-serif;}
+body{
+  background: linear-gradient(135deg,#ffe7d1,#ffd2d2,#c1e7ff,#d2f0ff);
+  background-size: 400% 400%;
+  animation: gradientBG 20s ease infinite;
+  min-height:100vh;
+  color:#fff;
+  padding:60px;
+}
+@keyframes gradientBG{
+  0%{background-position:0% 50%;}
+  50%{background-position:100% 50%;}
+  100%{background-position:0% 50%;}
+}
+.container{max-width:1200px;margin:auto;}
+h1{text-align:center;font-size:32px;margin-bottom:40px;font-weight:800;text-shadow:2px 2px 6px rgba(0,0,0,0.5);}
+.card{
+  background:rgba(0,0,0,0.55);
+  backdrop-filter:blur(20px);
+  padding:30px;
+  border-radius:25px;
+  border:2px solid;
+  border-image: linear-gradient(45deg,#ffe7d1,#ffd2d2,#c1e7ff,#d2f0ff) 1;
+  box-shadow:0 15px 35px rgba(0,0,0,0.5);
+  margin-bottom:30px;
+  transition:0.3s;
+}
+.card:hover{transform:translateY(-3px) scale(1.02);}
+label{font-size:14px;opacity:0.9;color:#fff;}
+input, select{
+  width:100%;
+  padding:14px;
+  margin-top:8px;
+  margin-bottom:18px;
+  background:rgba(0,0,0,0.35);
+  border:1px solid #fff;
+  border-radius:12px;
+  color:white;
+  font-size:16px;
+}
+button{
+  padding:14px 20px;
+  border:none;
+  border-radius:12px;
+  cursor:pointer;
+  font-size:16px;
+  font-weight:700;
+  background: linear-gradient(135deg,#ffe7d1,#ffd2d2,#c1e7ff,#d2f0ff);
+  color:#000;
+  box-shadow:0 6px 18px rgba(0,0,0,0.5);
+  transition:0.3s;
+}
+button:hover{transform:translateY(-2px);box-shadow:0 10px 25px rgba(0,0,0,0.6);}
+.generate{width:100%;margin-top:10px;}
+.results{display:grid;grid-template-columns:repeat(auto-fill,minmax(450px,1fr));gap:20px;}
+.promptCard{
+  background:rgba(0,0,0,0.65);
+  border-radius:18px;
+  border-left:5px solid #ffd2d2;
+  border-top:5px solid #ffe7d1;
+  padding:22px;
+  line-height:1.8;
+  position:relative;
+  box-shadow:0 10px 25px rgba(0,0,0,0.5);
+  transition:0.3s;
+}
+.promptCard:hover{transform:scale(1.02);}
+.promptTitle{font-size:18px;font-weight:800;margin-bottom:10px;color:#ffd2d2;text-shadow:1px 1px 3px #000;}
+.promptText{white-space:pre-wrap;font-size:14px;opacity:0.95;color:#fff;}
+.copyBtn{
+  margin-top:16px;
+  background:linear-gradient(135deg,#c1e7ff,#d2f0ff,#ffe7d1);
+  padding:8px 16px;
+  border-radius:10px;
+  color:#000;
+  border:none;
+  cursor:pointer;
+  font-weight:700;
+  transition:0.3s;
+}
+.copyBtn.copied{background:rgba(100,100,100,0.8);color:#fff;}
+.copyBtn:hover{transform:translateY(-2px);}
+</style>
 </head>
 <body>
-    <div class="generator-card">
-        <div class="header">
-            <h1>💰 低造价节庆美陈 · 20组提示词生成器</h1>
-            <p>3000元内落地 · KT板/PVC板 · 多层构成 · 真实节日配件 · 正面3D效果图</p>
-        </div>
+<div class="container">
+<h1>低造价节庆美陈 3D 效果图生成器-古月AI智能体</h1>
 
-        <div class="main">
-            <div class="input-section">
-                <h2>🎨 输入节日与场地信息</h2>
-                
-                <div class="input-group">
-                    <label>🎉 节日名称</label>
-                    <input type="text" id="festival" value="春节" placeholder="例：春节 / 中秋 / 圣诞 / 国庆">
-                </div>
+<div class="card">
+<label>节日名称</label>
+<input id="festival" placeholder="例如：春节、中秋、圣诞节">
+<label>公司名称 / 行业（可选）</label>
+<input id="company" placeholder="例如：餐饮公司、科技企业">
+<label>场地类型（可选）</label>
+<select id="venue">
+  <option value="">通用美陈结构</option>
+  <option value="前台">公司前台</option>
+  <option value="大门口">公司大门口 / 入口区域</option>
+  <option value="中庭">中庭 / 广场 / 开放空间</option>
+</select>
+<button class="generate" onclick="generate()">生成20组低造价节庆美陈提示词</button>
+</div>
 
-                <div class="input-group">
-                    <label>🏢 公司名称 / 行业属性</label>
-                    <input type="text" id="company" value="科技公司" placeholder="例：科技公司 / 银行 / 餐饮 / 教育">
-                </div>
+<div id="results" class="results"></div>
+</div>
 
-                <div class="input-group">
-                    <label>🏛️ 场地类型</label>
-                    <select id="venueType">
-                        <option value="公司前台" selected>公司前台</option>
-                        <option value="公司大门口">公司大门口 / 入口区域</option>
-                        <option value="商场中庭">商场中庭 / 开放空间</option>
-                        <option value="城市广场">城市广场 / 公共广场</option>
-                        <option value="未指定">未指定（通用结构）</option>
-                    </select>
-                </div>
+<script>
+function rand(arr){return arr[Math.floor(Math.random()*arr.length)];}
 
-                <div class="input-group">
-                    <label>🎨 节日核心符号</label>
-                    <textarea id="elements" rows="2">灯笼 · 鞭炮 · 福字 · 祥云 · 中国结 · 生肖 · 红包</textarea>
-                </div>
+let assistTexts=[
+  "低造价高创意","可落地施工","真实比例","板材易加工","主题突出","画面完成度高",
+  "节日氛围强","行业属性融合","多层次构图","小体量前景点缀","写实风格","板材全画面设计",
+  "低位辅助装饰","易安装","色彩自然","空间层次感","版式创意","主题文字清晰","前后错位叠加","结构安全稳固"
+];
 
-                <div class="input-group">
-                    <label>🌈 色彩倾向</label>
-                    <select id="colorSelect">
-                        <option value="中国红、金色、明黄、米白" selected>春节 · 中国红/金/米白</option>
-                        <option value="红色、白色、绿色、金色">圣诞 · 红/白/绿/金</option>
-                        <option value="粉色、红色、金色、浅黄">元宵 · 粉/红/金</option>
-                        <option value="橙色、黄色、棕色、米白">中秋 · 橙/黄/棕/米白</option>
-                        <option value="定制色彩">自定义</option>
-                    </select>
-                </div>
-
-                <button class="generate-btn" id="generateBtn">✨ 生成 20 组低造价美陈提示词 ✨</button>
-            </div>
-
-            <div class="output-section" id="outputSection">
-                <div class="output-header">
-                    <h2>🎈 20组正面效果图提示词</h2>
-                    <span class="badge" id="countDisplay">0 / 20</span>
-                </div>
-                <div class="prompts-grid" id="promptsList">
-                    <div class="prompt-item" style="background: #fefcf8; text-align: center; padding: 50px;">
-                        <div class="prompt-number">💰 点击生成按钮</div>
-                        <div class="prompt-text" style="color: #b7a88c;">将显示20组低造价节庆美陈装置AI提示词</div>
-                    </div>
-                </div>
-                <div class="footer-note">
-                    ⚡ 每组均为完整描述 · 写实3D效果图 · 3000元内可落地 · 正面完全展示
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        (function() {
-            const festivalInput = document.getElementById('festival');
-            const companyInput = document.getElementById('company');
-            const venueTypeInput = document.getElementById('venueType');
-            const elementsInput = document.getElementById('elements');
-            const colorSelect = document.getElementById('colorSelect');
-            const generateBtn = document.getElementById('generateBtn');
-            const promptsListDiv = document.getElementById('promptsList');
-            const countDisplay = document.getElementById('countDisplay');
-
-            function setLoading() {
-                promptsListDiv.innerHTML = `<div class="prompt-item" style="background: #fefcf8; text-align: center; padding: 50px;"><div class="prompt-number">💰 ⏳</div><div class="prompt-text" style="color: #b7a88c;">正在生成20组低造价美陈提示词，请稍候...</div></div>`;
-                countDisplay.innerText = '0 / 20';
-            }
-
-            function setupCopyButtons() {
-                document.querySelectorAll('.copy-btn').forEach(btn => {
-                    btn.addEventListener('click', function(e) {
-                        const promptText = this.getAttribute('data-prompt');
-                        navigator.clipboard.writeText(promptText).then(() => {
-                            const originalText = this.innerHTML;
-                            this.innerHTML = '✓ 已复制';
-                            this.classList.add('copied');
-                            
-                            setTimeout(() => {
-                                this.innerHTML = originalText;
-                                this.classList.remove('copied');
-                            }, 2000);
-                        }).catch(() => {
-                            alert('复制失败');
-                        });
-                    });
-                });
-            }
-
-            // 生成主题文字
-            function generateThemeText(festival, company) {
-                const themes = {
-                    '春节': ['福气满满', '新年快乐', '恭喜发财', '吉祥如意'],
-                    '中秋': ['花好月圆', '中秋快乐', '月满人圆', '团圆美满'],
-                    '圣诞': ['圣诞快乐', 'Merry Christmas', '铃儿响叮当', '圣诞欢歌'],
-                    '国庆': ['盛世华诞', '祖国万岁', '国庆快乐', '爱我中华'],
-                    '元宵': ['元宵快乐', '团团圆圆', '喜闹元宵', '花灯如昼']
-                };
-                if (themes[festival]) {
-                    return themes[festival][Math.floor(Math.random() * themes[festival].length)];
-                }
-                return '节日快乐';
-            }
-
-            // 根据场地类型获取结构描述
-            function getStructureByVenue(venueType, mainElement, secondaryElements, colors, themeText) {
-                const structures = {
-                    '公司前台': [
-                        `采用竖向背景式构成，主背景板为两层错落方形PVC板，造型取自{mainElement}轮廓，板面UV打印{colors}渐变与节日图形，主题文字“{themeText}”立体突出，两侧设置窄幅辅助背板承载{secondaryElements}纹样，不遮挡前台动线`,
-                        `前台背景装置由三层高低错落异形板构成，造型提取{mainElement}、{secondaryElements}元素，板面UV打印节日图案，最外层设置镂空{mainElement}轮廓作为视觉焦点`,
-                        `横向背景式装置，主视觉区居中，两侧辅助背板呈阶梯状排列，板面UV打印{colors}色块与{secondaryElements}纹样，主题文字置于黄金分割位`
-                    ],
-                    '公司大门口': [
-                        `拱门式节庆装置，主结构为拱形双层PVC板，造型取自{mainElement}轮廓，拱门两侧设置{secondaryElements}造型立柱，板面UV打印{colors}渐变，主题文字“{themeText}”居于拱顶`,
-                        `门头式装置，横跨入口上方的主板面UV打印{mainElement}与{secondaryElements}图案，两侧下垂装饰板呈灯笼造型，主题文字居中突出，保证通行高度`,
-                        `仪式感门框结构，左右立柱为多层{secondaryElements}造型板，顶部横梁为{mainElement}轮廓，板面UV打印{colors}喜庆纹样，形成通过式仪式感`
-                    ],
-                    '商场中庭': [
-                        `完整落地背景装置，中央主背景板为三层错落异形板，造型取自{mainElement}与{secondaryElements}轮廓，两侧设置高低错落的辅助背板，板面UV打印{colors}渐变与节日插画，主题文字“{themeText}”立体突出`,
-                        `开放式结构，主装置区由五个独立模块组成，中央模块最高，向两侧递减，每个模块UV打印不同{secondaryElements}图案，色彩{colors}统一，形成韵律感`,
-                        `多层次构成，主背景板后另设一层透景背板，前板镂空{mainElement}轮廓，后板UV打印{secondaryElements}，形成前后层次`
-                    ],
-                    '城市广场': [
-                        `大型落地装置，主背景板为三层叠加异形板，高度递增，板面UV打印{colors}渐变与{mainElement}图案，两侧设置{secondaryElements}造型柱，增强体量感`,
-                        `模块化组合，六个独立单元错落排列，每个单元UV打印不同{secondaryElements}，中央单元突出主题文字“{themeText}”，适合广场开阔空间`,
-                        `中心对称布局，左右各三块对称辅助板，中央主背景板为{mainElement}大型轮廓，板面UV打印{colors}喜庆图案`
-                    ],
-                    '未指定': [
-                        `中间主背景板为两层方形异形板，造型取自{mainElement}轮廓，板面UV打印{colors}渐变与{secondaryElements}图案，两侧设置高低错落辅助背板承载节日图形，主题文字“{themeText}”居于中央`,
-                        `三层叠加主背景板，每层板面UV打印不同{secondaryElements}纹样，两侧辅助板呈参差排列，整体通过前后错位形成层次`,
-                        `主视觉区居中，左右各两块对称辅助板，板面UV打印{colors}色块与{secondaryElements}，主题文字立体突出`
-                    ]
-                };
-                
-                const options = structures[venueType] || structures['未指定'];
-                return options[Math.floor(Math.random() * options.length)]
-                    .replace(/{mainElement}/g, mainElement)
-                    .replace(/{secondaryElements}/g, secondaryElements)
-                    .replace('{colors}', colors)
-                    .replace('{themeText}', themeText);
-            }
-
-            // 根据行业属性获取融合提示
-            function getIndustryHint(company) {
-                if (company.includes('科技')) return '融入科技蓝光带与几何线条元素，字体选择现代感字体';
-                if (company.includes('银行') || company.includes('金融')) return '融入金色与深蓝配色，字体稳重，增加条纹元素体现专业感';
-                if (company.includes('餐饮')) return '融入美食图形元素，色彩更鲜亮，增加食欲感';
-                if (company.includes('教育')) return '融入书本、铅笔等教育元素，色彩活泼亲和';
-                if (company.includes('儿童')) return '融入卡通元素，色彩更缤纷，造型更圆润';
-                return '融入行业特色色彩与图形元素';
-            }
-
-            function generatePrompts(festival, company, venueType, elements, colors) {
-                const elementList = elements.split(/[·,，\s\n]+/).filter(w => w.trim().length > 0);
-                const mainElement = elementList.length > 0 ? elementList[0] : '灯笼';
-                const secondaryElements = elementList.slice(1, 4).join('、') || '鞭炮、福字、祥云';
-                
-                const themeText = generateThemeText(festival, company);
-                const industryHint = getIndustryHint(company);
-                
-                const prompts = [];
-                
-                // 前景装置库 - 真实节日配件
-                const foregrounds = [
-                    '低位散落真实红包盒、小灯笼与仿真花艺，高度膝盖以下',
-                    '底部放置节日礼盒、彩球与铃铛，分散布置于装置前方',
-                    '前景布置小型红包堆、仿真鞭炮串与福字摆件',
-                    '低位点缀节日灯笼、中国结与仿真花枝',
-                    '底部散落圣诞礼盒、彩球与铃铛（圣诞用）',
-                    '前景设置月饼盒、兔子灯与仿真桂花枝（中秋用）',
-                    '低位放置元宵灯笼、汤圆碗与仿真梅花',
-                    '底部布置国庆小旗帜、气球与花艺',
-                    '前景点缀红包盒、金元宝与仿真鞭炮',
-                    '低位散落节日礼盒、彩色气球与花艺'
-                ];
-
-                for (let i = 0; i < 20; i++) {
-                    const structure = getStructureByVenue(venueType, mainElement, secondaryElements, colors, themeText);
-                    const foreground = foregrounds[i % foregrounds.length];
-                    
-                    let prompt = `你需要设计的美陈是${company}的${festival}主题低造价节庆装置，应用场景是${venueType}，核心目标是烘托节日氛围、传递节日情感，同时融合${company}行业属性，${industryHint}。${structure}，板面UV彩色打印，所有板材画面完整，色彩以${colors}为主，${foreground}，KT板与PVC板材质，所有板材厚度0.5-1cm，禁止白板裸露，真实节日配件点缀，整体造价控制在3000元内，写实3D效果图，真实比例可施工落地，正面完整展示。`;
-                    
-                    prompts.push(prompt);
-                }
-                
-                return prompts;
-            }
-
-            function renderPrompts(prompts) {
-                if (!prompts || prompts.length === 0) {
-                    promptsListDiv.innerHTML = `<div class="prompt-item" style="background: #fefcf8; text-align: center; padding: 50px;"><div class="prompt-number">💰 ⚠️</div><div class="prompt-text" style="color: #b7a88c;">生成失败，请重试</div></div>`;
-                    countDisplay.innerText = '0 / 20';
-                    return;
-                }
-
-                let html = '';
-                prompts.forEach((prompt, idx) => {
-                    const escapedPrompt = prompt.replace(/"/g, '&quot;');
-                    html += `
-                        <div class="prompt-item">
-                            <div class="prompt-number">💰 第 ${idx+1} 组 · 正面完全展示</div>
-                            <div class="prompt-text">${prompt}</div>
-                            <button class="copy-btn" data-prompt="${escapedPrompt}">📋 复制</button>
-                        </div>
-                    `;
-                });
-                
-                promptsListDiv.innerHTML = html;
-                countDisplay.innerText = `${prompts.length} / 20`;
-                setupCopyButtons();
-            }
-
-            function handleGenerate() {
-                const festival = festivalInput.value.trim() || '春节';
-                const company = companyInput.value.trim() || '科技公司';
-                const venueType = venueTypeInput.value;
-                const elements = elementsInput.value.trim() || '灯笼 · 鞭炮 · 福字 · 祥云 · 中国结 · 生肖 · 红包';
-                const colors = colorSelect.value;
-                
-                setLoading();
-                
-                setTimeout(() => {
-                    try {
-                        const prompts = generatePrompts(festival, company, venueType, elements, colors);
-                        renderPrompts(prompts);
-                    } catch (e) {
-                        promptsListDiv.innerHTML = `<div class="prompt-item" style="background: #fefcf8; text-align: center; padding: 50px;"><div class="prompt-number">💰 ❌</div><div class="prompt-text" style="color: #b7a88c;">生成出错</div></div>`;
-                        countDisplay.innerText = '0 / 20';
-                        console.error(e);
-                    }
-                }, 200);
-            }
-
-            generateBtn.addEventListener('click', handleGenerate);
-            
-            window.addEventListener('load', () => {
-                setTimeout(() => {
-                    handleGenerate();
-                }, 250);
-            });
-        })();
-    </script>
+function generate(){
+  let festival=document.getElementById("festival").value.trim();
+  if(!festival){alert("请输入节日名称");return;}
+  let company=document.getElementById("company").value.trim();
+  let venue=document.getElementById("venue").value;
+  let container=document.getElementById("results");
+  container.innerHTML="";
+  
+  for(let i=1;i<=20;i++){
+    let assist1=rand(assistTexts);
+    let assist2=rand(assistTexts);
+    let assist3=rand(assistTexts);
+    while(assist2===assist1) assist2=rand(assistTexts);
+    while(assist3===assist1 || assist3===assist2) assist3=rand(assistTexts);
+    
+    let text=`你需要设计的美陈是以节日${festival}为主题的低造价3D装置，${company?("结合"+company+"行业属性，"):""}材质使用KT板与PVC板，多层叠加结构，中间主背景板+辅助异形背板+低位前景点缀，整体真实比例，可施工，画面完整且富有节日氛围${venue?("，场地类型："+venue+"，装置结构根据场地自动调整"):""}，应用场景是各类空间（商业 / 公共 / 文化）+ 特定节日，核心目标是烘托节日氛围、传递节日情感，设计重点是：强化节日符号；色彩贴合节日调性并融合行业属性；在低造价条件下追求最佳设计感与画面完成度；材质低造价、易制作、易安装，需要中文提示词。辅助信息：${assist1}，${assist2}，${assist3}`;
+    
+    let card=document.createElement("div");
+    card.className="promptCard";
+    card.innerHTML=`
+      <div class="promptTitle">提示词 #${i}</div>
+      <div class="promptText">${text}</div>
+      <button class="copyBtn">复制提示词</button>
+    `;
+    let btn=card.querySelector("button");
+    btn.onclick=function(){
+      navigator.clipboard.writeText(text);
+      btn.innerText="已复制";
+      btn.classList.add("copied");
+      setTimeout(()=>{
+        btn.innerText="复制提示词";
+        btn.classList.remove("copied");
+      },3000);
+    };
+    container.appendChild(card);
+  }
+}
+</script>
 </body>
 </html>
